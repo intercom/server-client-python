@@ -26,8 +26,13 @@ def parse_datetime(date):
     if date is None:
         return None
 
-    return datetime.datetime.strptime(date, TABLEAU_DATE_FORMAT).replace(tzinfo=utc)
-
+    try:
+        import logging
+        logging.info("Parsing date {}".format(date))
+        return datetime.datetime.strptime(date, TABLEAU_DATE_FORMAT).replace(tzinfo=utc)
+    except ValueError:
+        error = "Invalid date {}".format(date)
+        raise ValueError(error)
 
 def format_datetime(date):
     return date.astimezone(tz=utc).strftime(TABLEAU_DATE_FORMAT)
